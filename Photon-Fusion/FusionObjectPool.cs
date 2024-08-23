@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Airpass.DesignPattern;
+using Mono.CSharp;
 using Tools.Utility;
 using UnityEngine;
 
@@ -16,6 +17,33 @@ public abstract class FusionObjectPool<TClass, TFusionPoolObjectClass> : Singlet
     
     protected List<TFusionPoolObjectClass> _inactiveObjects = new();
     protected List<TFusionPoolObjectClass> _activeObjects = new();
+
+    public void PoolListOperation(TFusionPoolObjectClass target, bool active)
+    {
+        if (active)
+        {
+            if (!_activeObjects.Contains(target))
+            {
+                _activeObjects.Add(target);
+            }
+            if (_inactiveObjects.Contains(target))
+            {
+                _inactiveObjects.Remove(target);
+            }
+
+        }
+        else
+        {
+            if (_activeObjects.Contains(target))
+            {
+                _activeObjects.Remove(target);
+            }
+            if (!_inactiveObjects.Contains(target))
+            {
+                _inactiveObjects.Add(target);
+            }
+        }
+    }
 
     public virtual bool GetPoolObject(out TFusionPoolObjectClass poolObject,
         Action<TFusionPoolObjectClass> afterAuthorized = null,
@@ -51,6 +79,13 @@ public abstract class FusionObjectPool<TClass, TFusionPoolObjectClass> : Singlet
 
         _activeObjects.Remove(poolObject);
         _inactiveObjects.Add(poolObject);
+        if (!poolObject.Object.HasStateAuthority)
+        {
+            poolObject.Object.RequestStateAuthority();
+        }
+        PoolListOperation(poolObject, false);
+        this.WaitUntilToDo(() => poolObject.Object.HasStateAuthority,
+            () => poolObject.Active = false);
         
         return true;
     }
@@ -73,13 +108,17 @@ public abstract class FusionObjectPool<TClass, TFusionPoolObjectClass> : Singlet
             poolObject.Object.RequestStateAuthority();
         }
 
+        PoolListOperation(poolObject, true);
         Instance.WaitUntilToDo(() => poolObject.HasStateAuthority,
             () =>
             {
                 afterAuthorized?.Invoke(poolObject);
+                _inactiveObjects.Remove(poolObject);
+                poolObject.afterActiveChangeAction = (o, b) =>
+                {
+                    if (b) afterActive?.Invoke(o);
+                };
                 poolObject.Active = true;
-                Instance.WaitUntilToDo(() => poolObject.Active,
-                    () => afterActive?.Invoke(poolObject));
             });
     }
 }

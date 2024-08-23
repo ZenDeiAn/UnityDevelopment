@@ -1,3 +1,4 @@
+using System;
 using Fusion;
 using UnityEngine;
 
@@ -8,39 +9,22 @@ public abstract class FusionPoolObject<TClass, TFusionObjectPoolClass> : Network
     public TFusionObjectPoolClass Pool => _pool ??= FusionObjectPool<TFusionObjectPoolClass, TClass>.Instance;
 
     protected TFusionObjectPoolClass _pool;
+
+    public Action<TClass, bool> afterActiveChangeAction;
     
     [Networked(OnChanged = nameof(OnActiveChanged))] public bool Active { get; set; }
-
-    protected static void OnActiveChanged(Changed<FusionPoolObject<TClass, TFusionObjectPoolClass>> changed)
+    
+    public static void OnActiveChanged(Changed<FusionPoolObject<TClass, TFusionObjectPoolClass>> changed)
     {
         var self = changed.Behaviour;
         TFusionObjectPoolClass pool = self.Pool;
         
-        if (self.Active)
-        {
-            if (!pool.ActiveObjects.Contains(self as TClass))
-            {
-                pool.ActiveObjects.Add(self as TClass);
-            }
-            if (pool.InactiveObjects.Contains(self as TClass))
-            {
-                pool.InactiveObjects.Remove(self as TClass);
-            }
-
-        }
-        else
-        {
-            if (pool.ActiveObjects.Contains(self as TClass))
-            {
-                pool.ActiveObjects.Remove(self as TClass);
-            }
-            if (!pool.InactiveObjects.Contains(self as TClass))
-            {
-                pool.InactiveObjects.Add(self as TClass);
-            }
-        }
+        pool.PoolListOperation(self as TClass, self.Active);
 
         self.OnActiveChanged(self.Active);
+        
+        self.afterActiveChangeAction?.Invoke(self as TClass, self.Active);
+        self.afterActiveChangeAction = null;
     }
 
     public virtual void OnActiveChanged(bool active)
