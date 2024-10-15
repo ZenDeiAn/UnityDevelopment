@@ -5,7 +5,7 @@ All contents are open source even if not excelent so.
 
 ## Main Link
 
-- [FrameworkUnityPackage](/Package) : The unity package for all RaindowStudio contents development.
+- [FrameworkUnityPackage](/Package/RaindowStudioFramework.unitypackage) : The unity package for all RaindowStudio contents development.
 
 ## Contact
 
@@ -14,4 +14,4 @@ All contents are open source even if not excelent so.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](/LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](LISENCE.MD) file for details.
