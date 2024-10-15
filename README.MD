@@ -1,6 +1,6 @@
 # RaindowStudio - Unity Development
 
-This is a Learning Note and Backup like repository for idie game developer RaindowStudio (aka DeiAnzen myself currently lmao) to develop Unity projects.  
+This is a Learning Note and Backup like repository for indie game developer RaindowStudio (aka ZenDeiAn myself currently) to develop Unity projects.  
 All contents are open source even if not excelent so. 
 
 ## Main Link
