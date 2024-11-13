@@ -1,6 +1,8 @@
+using RaindowStudio.DesignPattern;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 
 namespace RaindowStudio.Language
@@ -10,7 +12,7 @@ namespace RaindowStudio.Language
     {
         public string key = "";
         public LanguageDataType dataType = LanguageDataType.Text;
-        public List<string> textData = new List<string>();
+        public List<LanguageTextData> textData = new List<LanguageTextData>();
         public List<Sprite> spriteData = new List<Sprite>();
 
         public List<object> List

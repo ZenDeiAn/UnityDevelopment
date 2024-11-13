@@ -1,3 +1,4 @@
+using RaindowStudio.DesignPattern;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -55,12 +56,15 @@ namespace RaindowStudio.Language
                     // Text
                     if (go.TryGetComponent(out Text txt))
                     {
-                        txt.text = languageObject as string;
+                        txt.text = (languageObject as LanguageTextData).text;
                     }
                     // TextMeshPro
                     else if (go.TryGetComponent(out TextMeshProUGUI tmp))
                     {
-                        tmp.SetText(languageObject as string);
+                        LanguageTextData data = languageObject as LanguageTextData;
+                        tmp.font = data.font;
+                        tmp.UpdateFontAsset();
+                        tmp.SetText(data.text);
                     }
                     // Image
                     else if (go.TryGetComponent(out Image img))

@@ -2,6 +2,7 @@
 using System.Linq;
 using UnityEngine;
 using System.Collections.Generic;
+using TMPro;
 
 namespace RaindowStudio.DesignPattern
 {
@@ -30,5 +31,15 @@ namespace RaindowStudio.DesignPattern
                 actions[_enum]?.Invoke();
             }
         }
+    }
+}
+
+namespace RaindowStudio.Language
+{
+    [Serializable]
+    public class LanguageTextData
+    {
+        public string text;
+        public TMP_FontAsset font;
     }
 }
