@@ -21,6 +21,7 @@ namespace RaindowStudio.Language
         // 3. Language data key
         // 4. Language data
         public static Dictionary<string, Dictionary<LanguageType, Dictionary<string, object>>> languageDatas = new Dictionary<string, Dictionary<LanguageType, Dictionary<string, object>>>();
+        public static Dictionary<string, Dictionary<LanguageType, TMP_FontAsset>> defaultFontData = new Dictionary<string, Dictionary<LanguageType, TMP_FontAsset>>();
         public static Dictionary<string, string[]> dataSets = new Dictionary<string, string[]>();
         public static event Action<LanguageType> LanguageChangedEvent;
 
@@ -62,8 +63,16 @@ namespace RaindowStudio.Language
                     else if (go.TryGetComponent(out TextMeshProUGUI tmp))
                     {
                         LanguageTextData data = languageObject as LanguageTextData;
-                        tmp.font = data.font;
-                        tmp.UpdateFontAsset();
+                        if (data.font != null)
+                        {
+                            tmp.font = data.font;
+                            tmp.UpdateFontAsset();
+                        }
+                        else if (defaultFontData[usingDataSet].TryGetValue(language, out TMP_FontAsset font))
+                        {
+                            tmp.font = font;
+                            tmp.UpdateFontAsset();
+                        }
                         tmp.SetText(data.text);
                     }
                     // Image
@@ -106,6 +115,12 @@ namespace RaindowStudio.Language
                     }
                 }
                 dataSets[datas.name] = keys;
+
+                defaultFontData[datas.name] = new Dictionary<LanguageType, TMP_FontAsset>();
+                for (int i = 0; i < datas.defaultFont.Count; ++i)
+                {
+                    defaultFontData[datas.name][(LanguageType)ltArray.GetValue(i)] = datas.defaultFont[i];
+                }
             }
         }
 
