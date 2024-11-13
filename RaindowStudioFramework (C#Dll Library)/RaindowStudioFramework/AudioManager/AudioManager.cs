@@ -138,7 +138,6 @@ namespace RaindowStudio.AudioManager
             }
         }
 
-
         public void ReloadAudioClips()
         {
             audioClips = Resources.LoadAll<AudioClip>("AudioClip").ToList();

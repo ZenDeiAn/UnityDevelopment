@@ -124,7 +124,7 @@ namespace RaindowStudio.Utility
             return digits;
         }
 
-        public static void UpdateEnumInDynamicCodeScript(string enumName, string[] enums, Action<Dictionary<string, int>> resortedAction = null) => UpdateEnumInScript(Path.Combine(Application.dataPath, "DynamicCode.cs"), enumName, enums, resortedAction);
+        public static void UpdateEnumInDynamicCodeScript(string enumName, string[] enums, Action<Dictionary<string, int>> resortedAction = null) => UpdateEnumInScript(Path.Combine(Application.dataPath, @"RaindowStudio\DynamicCode.cs"), enumName, enums, resortedAction);
 
         public static void UpdateEnumInScript(string scriptPath, string enumName, string[] enums, Action<Dictionary<string, int>> resortedAction = null)
         {
