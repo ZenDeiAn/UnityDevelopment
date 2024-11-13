@@ -1,6 +1,6 @@
 # RaindowStudio - Unity Development
 
-This is a Learning Note and Backup like repository for idie game developer RaindowStudio (aka DeiAnzen myself currently lmao) to develop Unity projects.  
+This is a Learning Note and Backup like repository for indie game developer RaindowStudio (aka ZenDeiAn myself currently) to develop Unity projects.  
 All contents are open source even if not excelent so. 
 
 ## Main Link
@@ -14,4 +14,4 @@ All contents are open source even if not excelent so.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LISENCE.MD) file for details.
+This project is licensed under the MIT License - see the [LICENSE](LISENCE) file for details.
