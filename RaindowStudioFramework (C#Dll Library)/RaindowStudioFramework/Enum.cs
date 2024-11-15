@@ -4,7 +4,7 @@ namespace RaindowStudio.DesignPattern
 {
     public enum ProcessorStateTriggerType
     {
-        Activtate,
+        Activate,
         Deactivate,
         Update,
         FixedUpdate,

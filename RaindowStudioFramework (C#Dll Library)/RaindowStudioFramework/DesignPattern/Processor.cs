@@ -5,10 +5,11 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using RaindowStudio.Attribute;
+using Unity.IO.LowLevel.Unsafe;
 
 namespace RaindowStudio.DesignPattern
 {
-    public abstract class Processor<TE> : MonoBehaviour where TE : Enum
+    public abstract class Processor<TE> : MonoBehaviour where TE : struct, Enum
     {
         private const BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
 
@@ -30,9 +31,35 @@ namespace RaindowStudio.DesignPattern
                 preState = state;
                 state = value;
                 StateTriggerEvent?.Invoke(ProcessorStateTriggerType.Deactivate, preState);
-                StateTriggerEvent?.Invoke(ProcessorStateTriggerType.Activtate, state);
+                StateTriggerEvent?.Invoke(ProcessorStateTriggerType.Activate, state);
             }
         }
+
+        public void ChangeStateByIndex(int targetStateIndex)
+        {
+            if (Enum.IsDefined(typeof(TE), targetStateIndex))
+            {
+                TE targetState = (TE)Enum.ToObject(typeof(TE), targetStateIndex);
+                ChangeState(targetState);
+                return;
+            }
+
+            Debug.LogError($"The parameter '{targetStateIndex}' is not available in type '{typeof(TE)}'.");
+        }
+
+        public void ChangeStateByString(string targetStateString)
+        {
+            if (Enum.TryParse(targetStateString, out TE state))
+            {
+                ChangeState(state);
+                return;
+            }
+
+            Debug.LogError($"The parameter '{targetStateString}' is not available in type '{typeof(TE)}'.");
+        }
+
+        public void ChangeState(TE targetState) =>
+            State = targetState;
 
         /// <summary>
         /// Initialization that could be defined to called in any where not specific.
@@ -114,7 +141,7 @@ namespace RaindowStudio.DesignPattern
 
     public abstract class Processor<T, TE> : SingletonUnity<T>
         where T : Processor<T, TE>
-        where TE : Enum
+        where TE : struct, Enum
     {
         private const BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
 
@@ -136,9 +163,35 @@ namespace RaindowStudio.DesignPattern
                 preState = state;
                 state = value;
                 StateTriggerEvent?.Invoke(ProcessorStateTriggerType.Deactivate, preState);
-                StateTriggerEvent?.Invoke(ProcessorStateTriggerType.Activtate, state);
+                StateTriggerEvent?.Invoke(ProcessorStateTriggerType.Activate, state);
             }
         }
+
+        public void ChangeStateByIndex(int targetStateIndex)
+        {
+            if (Enum.IsDefined(typeof(TE), targetStateIndex))
+            {
+                TE targetState = (TE)Enum.ToObject(typeof(TE), targetStateIndex);
+                ChangeState(targetState);
+                return;
+            }
+
+            Debug.LogError($"The parameter '{targetStateIndex}' is not available in type '{typeof(TE)}'.");
+        }
+
+        public void ChangeStateByString(string targetStateString)
+        {
+            if (Enum.TryParse(targetStateString, out TE state))
+            {
+                ChangeState(state);
+                return;
+            }
+
+            Debug.LogError($"The parameter '{targetStateString}' is not available in type '{typeof(TE)}'.");
+        }
+
+        public void ChangeState(TE targetState) =>
+            State = targetState;
 
         /// <summary>
         /// Initialization that could be defined to called in any where not specific.
@@ -217,7 +270,7 @@ namespace RaindowStudio.DesignPattern
 
     public abstract class ProcessorEternal<T, E> : Processor<T, E>
         where T : ProcessorEternal<T, E>
-        where E : Enum
+        where E : struct, Enum
     {
         protected override void Initialization()
         {
