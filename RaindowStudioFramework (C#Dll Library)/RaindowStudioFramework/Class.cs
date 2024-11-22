@@ -63,6 +63,26 @@ namespace RaindowStudio.Utility
                 }
                 return values[keys.IndexOf(key)];
             }
+            set
+            {
+                if (keys == null || keys.Count == 0)
+                {
+                    InitializeKeys();
+                }
+                values[keys.IndexOf(key)] = value;
+            }
+        }
+
+        public int Count
+        {
+            get
+            {
+                if (keys == null || keys.Count == 0)
+                {
+                    InitializeKeys();
+                }
+                return keys.Count;
+            }
         }
 
         public EnumPairList()
