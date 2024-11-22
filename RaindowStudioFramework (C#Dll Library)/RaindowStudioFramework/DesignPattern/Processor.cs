@@ -249,7 +249,13 @@ namespace RaindowStudio.DesignPattern
                 }
             }
 
-            StateTriggerEvent += (pstt, te) => stateTriggerKeyOperator[pstt].Operate(te);
+            StateTriggerEvent += (pstt, te) =>
+            {
+                if (stateTriggerKeyOperator.ContainsKey(pstt))
+                {
+                    stateTriggerKeyOperator[pstt].Operate(te);
+                }
+            };
         }
 
         protected virtual void FixedUpdate()
