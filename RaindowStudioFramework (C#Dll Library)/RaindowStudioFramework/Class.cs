@@ -3,7 +3,6 @@ using System.Linq;
 using UnityEngine;
 using System.Collections.Generic;
 using TMPro;
-using UnityEditor;
 
 namespace RaindowStudio.DesignPattern
 {
@@ -85,11 +84,6 @@ namespace RaindowStudio.Utility
             }
         }
 
-        public EnumPairList()
-        {
-            InitializeKeys();
-        }
-
         private void InitializeKeys()
         {
             keys = Enum.GetValues(typeof(TE)).Cast<TE>().ToList();
@@ -112,5 +106,24 @@ namespace RaindowStudio.Utility
                 InitializeKeys();
             }
         }
+
+        public EnumPairList()
+        {
+            InitializeKeys();
+        }
+
+        public EnumPairList(EnumPairList<TE, T> other)
+        {
+            if (other == null) throw new ArgumentNullException(nameof(other));
+
+            keys = new List<TE>(other.keys);
+            values = new List<T>(other.values);
+        }
+    }
+
+    [Serializable]
+    public class EnumPercentageList<TE> : EnumPairList<TE, float>
+    {
+
     }
 }
