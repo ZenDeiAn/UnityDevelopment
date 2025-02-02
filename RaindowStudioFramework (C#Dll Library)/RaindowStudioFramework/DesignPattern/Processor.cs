@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using RaindowStudio.Attribute;
-using Unity.IO.LowLevel.Unsafe;
 
 namespace RaindowStudio.DesignPattern
 {
@@ -115,7 +114,13 @@ namespace RaindowStudio.DesignPattern
                 }
             }
 
-            StateTriggerEvent += (pstt, te) => stateTriggerKeyOperator[pstt].Operate(te);
+            StateTriggerEvent += (pstt, te) =>
+            {
+                if (stateTriggerKeyOperator.ContainsKey(pstt))
+                {
+                    stateTriggerKeyOperator[pstt].Operate(te);
+                }
+            };
         }
 
         protected virtual void FixedUpdate()

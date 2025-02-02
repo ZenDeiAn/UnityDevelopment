@@ -8,6 +8,6 @@ namespace RaindowStudio.Language
     public class LanguageDataObject : ScriptableObject
     {
         public List<TMP_FontAsset> defaultFont = new List<TMP_FontAsset>();
-        public List<LanguageData> languageDatas = new List<LanguageData>();
+        public List<LanguageData> languageData = new List<LanguageData>();
     }
 }

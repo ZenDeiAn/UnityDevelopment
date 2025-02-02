@@ -20,19 +20,19 @@ namespace RaindowStudio.Language
         // 2. LanguageType
         // 3. Language data key
         // 4. Language data
-        public static Dictionary<string, Dictionary<LanguageType, Dictionary<string, object>>> languageDatas = new Dictionary<string, Dictionary<LanguageType, Dictionary<string, object>>>();
+        public static Dictionary<string, Dictionary<LanguageType, Dictionary<string, object>>> languageDataDic = new Dictionary<string, Dictionary<LanguageType, Dictionary<string, object>>>();
         public static Dictionary<string, Dictionary<LanguageType, TMP_FontAsset>> defaultFontData = new Dictionary<string, Dictionary<LanguageType, TMP_FontAsset>>();
         public static Dictionary<string, string[]> dataSets = new Dictionary<string, string[]>();
         public static event Action<LanguageType> LanguageChangedEvent;
 
         public static object GetLanguageData(string dataSet, string key)
         {
-            return languageDatas[dataSet][language][key];
+            return languageDataDic[dataSet][language][key];
         }
 
         public static object GetLanguageData(string dataSet, LanguageType type, string key)
         {
-            return languageDatas[dataSet][type][key];
+            return languageDataDic[dataSet][type][key];
         }
 
         public static void ChangeLanguage(LanguageType language)
@@ -48,7 +48,12 @@ namespace RaindowStudio.Language
         {
             for (int i = 0; i < languageObjects.Count; ++i)
             {
-                object languageObject = languageDatas[usingDataSet][language][languageObjects[i].key];
+                if (!(languageDataDic.ContainsKey(usingDataSet) &&
+                    languageDataDic[usingDataSet].ContainsKey(language) &&
+                    languageDataDic[usingDataSet][language].ContainsKey(languageObjects[i].key)))
+                    return;
+
+                object languageObject = languageDataDic[usingDataSet][language][languageObjects[i].key];
                 List<GameObject> gos = languageObjects[i].componentObjects;
 
                 for (int j = 0; j < gos.Count; ++j)
@@ -89,21 +94,24 @@ namespace RaindowStudio.Language
             }
         }
 
-        public static void ReloadResourceData()
+        public static void ReloadResourceData(LanguageDataObject[] languageData = null)
         {
             dataSets.Clear();
-            languageDatas.Clear();
+            languageDataDic.Clear();
             Array ltArray = Enum.GetValues(typeof(LanguageType));
-            LanguageDataObject[] datasArray = Resources.LoadAll<LanguageDataObject>("Language");
-            for (int m = 0; m < datasArray.Length; ++m)
+            LanguageDataObject[] dataArray =
+                languageData == null ?
+                Resources.LoadAll<LanguageDataObject>("Language") :
+                languageData;
+            for (int m = 0; m < dataArray.Length; ++m)
             {
-                LanguageDataObject datas = datasArray[m];
+                LanguageDataObject datas = dataArray[m];
                 string[] keys = new string[0];
-                languageDatas[datas.name] = new Dictionary<LanguageType, Dictionary<string, object>>();
-                Dictionary<LanguageType, Dictionary<string, object>> current = languageDatas[datas.name];
-                for (int i = 0; i < datas.languageDatas.Count; ++i)
+                languageDataDic[datas.name] = new Dictionary<LanguageType, Dictionary<string, object>>();
+                Dictionary<LanguageType, Dictionary<string, object>> current = languageDataDic[datas.name];
+                for (int i = 0; i < datas.languageData.Count; ++i)
                 {
-                    LanguageData data = datas.languageDatas[i];
+                    LanguageData data = datas.languageData[i];
                     Array.Resize(ref keys, keys.Length + 1);
                     keys[keys.Length - 1] = data.key;
                     for (int j = 0; j < ltArray.Length; ++j)
@@ -126,7 +134,7 @@ namespace RaindowStudio.Language
 
         void Awake()
         {
-            if (languageDatas.Count == 0)
+            if (languageDataDic.Count == 0)
             {
                 ReloadResourceData();
             }

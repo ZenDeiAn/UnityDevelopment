@@ -369,7 +369,10 @@ MonoBehaviour:
   dataSetIndex: 0
   usingDataSet: LanguageData
   languagePreview: 0
-  languageObjects: []
+  languageObjects:
+  - indexOfKey: 1
+    key: asdasdsd
+    componentObjects: []
 --- !u!4 &807208851
 Transform:
   m_ObjectHideFlags: 0
